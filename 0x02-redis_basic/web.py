@@ -13,7 +13,7 @@ def wrap_requests(fn: Callable) -> Callable:
 
     @wraps(fn)
     def wrapper(url):
-        """ Wrapper for decorator """
+        """ Wrapper for decorated function """
         redis_conn.incr(f"count:{url}")
         cached_response = redis_conn.get(f"cached:{url}")
         if cached_response:
@@ -26,6 +26,10 @@ def wrap_requests(fn: Callable) -> Callable:
 
 @wrap_requests
 def get_page(url: str) -> str:
-    """ Get page content """
+    """ Fetches a web page and caches it """
     response = requests.get(url)
     return response.text
+
+if __name__ == "__main__":
+    """Example usage"""
+    print(get_page("http://slowwly.robertomurray.co.uk"))
